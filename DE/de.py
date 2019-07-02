@@ -26,21 +26,37 @@ class de :
         self.xbest = np.full(d, float('inf')) # 最も良い位置(次元の数だけ存在する)
 
         # 初期値によるFの計算
-        self.f[0] = self.sphere_f(self.x[0])
-        #self.rastrigin_f(0)
+        self.sphere_f()
+        #self.rastrigin_f()
 
-    def sphere_f(self, xu) :
+    def sphere_u(self, xu) :
         f = 0
         for d in range(self.d) :
             xd = xu[d]
             f += xd**2
         return f
 
-    def rastrigin_f(self,i) :
-        self.f[i] = 0
+    def sphere_f(self) :
+        for i in range(self.m) :
+            xd = 0
+            for j in range(self.d) :
+                xd += self.x[i][j]**2
+            self.f[i] = xd
+
+    def rastrigin_u(self,xu) :
+        f = 0
         for d in range(self.d) :
-            xd = self.x[i][d]
-            self.f[i] += ((xd**2) - 10*np.cos(2*np.pi*xd) + 10)
+            xd = ((xu[d]**2) - 10*np.cos(2*np.pi*xu[d]) + 10)
+            f += xd
+        return f
+
+    def rastrigin_f(self) :
+        for i in range(self.m) :
+            xd = 0
+            for j in range(self.d) :
+                xd += ((self.x[i][j]**2) - 10*np.cos(2*np.pi*self.x[i][j]) + 10)
+            self.f[i] = xd
+
 
     def calc(self) :
         for self.stopt in range(1, self.tmax+1) :
@@ -58,18 +74,18 @@ class de :
                     else :
                         self.u[j] = self.x[i][j]
                 
-                self.ftmp = self.sphere_f(self.u) # Uの評価関数Ftmpの計算
+                self.ftmp = self.sphere_u(self.u) # Uの評価関数Ftmpの計算
+                #self.ftmp = self.rastrigin_u(self.u) # Uの評価関数Ftmpの計算
                 if self.ftmp < self.f[i] :
                     self.f[i] = self.ftmp
                     self.xnew[i] = self.u
                     if self.ftmp < self.fbest :
                         self.fbest = self.ftmp
                         self.xbest = self.x[i]
-                        print("終了時刻t = " + str(self.stopt))
-                        print(self.fbest)
                 else :
                     self.xnew[i] = self.x[i]
             
+            self.x = self.xnew
             if self.fbest < self.fend :
                 break
 
