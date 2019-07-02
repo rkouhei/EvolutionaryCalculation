@@ -12,3 +12,6 @@
 
 ### pso
 - 粒子群最適化法のクラスファイル
+
+### DE
+- 差分進化法(Differential Evolution)のクラスファイル
