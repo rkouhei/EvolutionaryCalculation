@@ -1,4 +1,4 @@
-# EvolutionaryCalculation
+# EvolutionaryComputation
 進化計算アルゴリズムをpython3で実装する
 
 ## newton.ipynb
