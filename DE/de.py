@@ -62,7 +62,7 @@ class de :
         for self.stopt in range(1, self.tmax+1) :
             for i in range(self.m) :
                 rabc = np.hstack((np.arange(0,i),np.arange(i+1,self.m)))
-                a, b, c = np.random.choice(rabc,3,replace=True)
+                a, b, c = np.random.choice(rabc,3,replace=False)
                 #for j in range(self.d) :
                 self.v = self.x[a] + self.fw*(self.x[b] - self.x[c])
 
@@ -74,8 +74,8 @@ class de :
                     else :
                         self.u[j] = self.x[i][j]
                 
-                self.ftmp = self.sphere_u(self.u) # Uの評価関数Ftmpの計算
-                #self.ftmp = self.rastrigin_u(self.u) # Uの評価関数Ftmpの計算
+                # self.ftmp = self.sphere_u(self.u) # Uの評価関数Ftmpの計算
+                self.ftmp = self.rastrigin_u(self.u) # Uの評価関数Ftmpの計算
                 if self.ftmp < self.f[i] :
                     self.f[i] = self.ftmp
                     self.xnew[i] = self.u
