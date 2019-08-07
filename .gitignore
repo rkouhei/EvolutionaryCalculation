@@ -1,3 +1,7 @@
 # 以下のファイルは無視する
 etc/
 excel/
+
+# dotfiles
+.ipynb_checkpoints
+.vscode

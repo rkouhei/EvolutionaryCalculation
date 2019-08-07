@@ -13,9 +13,10 @@ class de :
     xmax = 5 # 乱数生成の範囲(上限)
 
     # 初期化
-    def __init__(self, m, d) :
+    def __init__(self, m, d, func='sphere') :
         self.m = m # 個体数
         self.d = d # 解の次元
+        self.func = func # 目的関数の設定
         self.x = (self.xmax - self.xmin) * np.random.rand(m,d) + self.xmin # M個*D次元の配列(位置)
         self.xnew = np.zeros((m,d)) # M個*D次元の配列(新しい位置)
         self.v = np.zeros(d) # D次元の配列(速度)
@@ -26,8 +27,10 @@ class de :
         self.xbest = np.full(d, float('inf')) # 最も良い位置(次元の数だけ存在する)
 
         # 初期値によるFの計算
-        self.sphere_f()
-        #self.rastrigin_f()
+        if self.func == 'sphere' :
+            self.sphere_f()
+        elif self.func == 'rastrigin' :
+            self.rastrigin_f()
 
     def sphere_u(self, xu) :
         f = 0
@@ -59,6 +62,7 @@ class de :
 
 
     def calc(self) :
+        each_fg = [] # 実験用
         for self.stopt in range(1, self.tmax+1) :
             for i in range(self.m) :
                 rabc = np.hstack((np.arange(0,i),np.arange(i+1,self.m)))
@@ -74,8 +78,12 @@ class de :
                     else :
                         self.u[j] = self.x[i][j]
                 
-                # self.ftmp = self.sphere_u(self.u) # Uの評価関数Ftmpの計算
-                self.ftmp = self.rastrigin_u(self.u) # Uの評価関数Ftmpの計算
+                # 目的関数
+                if self.func == 'sphere' :
+                    self.ftmp = self.sphere_u(self.u) # Uの評価関数Ftmpの計算
+                elif self.func == 'rastrigin' :
+                    self.ftmp = self.rastrigin_u(self.u) # Uの評価関数Ftmpの計算
+                
                 if self.ftmp < self.f[i] :
                     self.f[i] = self.ftmp
                     self.xnew[i] = self.u
@@ -85,9 +93,11 @@ class de :
                 else :
                     self.xnew[i] = self.x[i]
             
+            each_fg.append(self.fbest)
             self.x = self.xnew
             if self.fbest < self.fend :
                 break
+        return each_fg
 
 if __name__ == '__main__' :
     de1 = de(30,5)
